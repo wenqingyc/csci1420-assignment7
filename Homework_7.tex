@@ -68,13 +68,50 @@ Compute the prediction $\hat{Y}$ for $K=1$, $K=3$, and $K=5$.
 Show the relevant distances and identify the neighbors used
 for each prediction.
 
+\textbf{Solution:} Use Euclidean distance to calculate the distance between the test applicant $x=(2,1)$ and each training example:
+
+\[
+\begin{aligned}
+d(x,x_1)
+&=\sqrt{(2-1)^2+(1-0)^2}
+=\sqrt{2}\approx1.414,\\
+d(x,x_2)
+&=\sqrt{(2-0.5)^2+(1-2)^2}
+=\sqrt{3.25}\approx1.803,\\
+d(x,x_3)
+&=\sqrt{(2-0)^2+(1-1.5)^2}
+=\sqrt{4.25}\approx2.062,\\
+d(x,x_4)
+&=\sqrt{(2-2.5)^2+(1-1)^2}
+=0.5,\\
+d(x,x_5)
+&=\sqrt{(2-4)^2+(1-0)^2}
+=\sqrt{5}\approx2.236,\\
+d(x,x_6)
+&=\sqrt{(2-5)^2+(1-3)^2}
+=\sqrt{13}\approx3.606.
+\end{aligned}
+\]
+
+Then we sort the applicants from the closest distance to the furthest distance: $4,\;1,\;2,\;3,\;5,\;6$ with the corresponding labels $1,\;0,\;0,\;1,\;1,\;0$.
+
+For $K=1$, the nearest neighbor is applicant 4 with label $Y=1$. Therefore,
+$\hat{Y}_{K=1}=1$.
+
+For $K=3$, the 3 nearest neighbors are applicants 4, 1, and 2 with labels $(1,0,0)$. Since the majority label is 0, $\hat{Y}_{K=3}=0$.
+
+For $K=5$, the 5 nearest neighbors are applicants 4, 1,
+2, 3, and 5, with labels $(1,0,0,1,1)$. Since the majority label is 1, $\hat{Y}_{K=5}=1$.
 
 
 \item[(b)] Explain how increasing $K$ generally affects
 the complexity of the decision boundary, the training error,
 and the tendency of the classifier to overfit.
 
+\textbf{Solution:} Increasing $K$ will generally give a smoother and
+less complex decision boundary because predictions depend on more neighborhoods rather than individual training examples.
 
+Training error generally increases as $K$ increases, but it is not necessarily monotonic for every value of $K$. Smaller $K$ will make the classifier sensitive to individual noise, increasing the risk of overfitting. Thus a larger $K$ reduce the risk of overfitting but a too large $K$ will likely cause underfitting.
 
 \item[(c)] The company evaluates its classifier on a separate
 test set and obtains the following results:
@@ -97,6 +134,17 @@ Does the classifier satisfy \textbf{statistical parity}?
 Does it satisfy the \textbf{80\% rule} for disparate impact?
 Justify your answers.
 
+\textbf{Solution:} 
+
+$P(\hat{Y}=1\mid S=1)=\frac{40}{100}=0.4$
+
+$P(\hat{Y}=1 \mid S=0)=\frac{40}{100}=0.4$
+
+Since both groups have the same positive prediction rate, statistical parity is satisfied.
+
+$DI = \frac{P(\hat{Y}=1\mid S=1)}{P(\hat{Y}=1\mid S=0)} = \frac{0.4}{0.4}=1.$
+
+Since $1\geq0.8$, the classifier also satisfies the 80\% rule.
 
 
 \item[(d)] Compute
@@ -109,7 +157,13 @@ P(\hat{Y}=1 \mid Y=1,S=0).
 Does the classifier satisfy the \textbf{positive-rate parity}
 condition discussed in class?
 
+\textbf{Solution:}
 
+$P(\hat{Y}=1 \mid Y=1,S=1)=\frac{30}{50}=0.6$
+
+$P(\hat{Y}=1 \mid Y=1,S=1)=\frac{20}{25}=0.8$
+
+Since the true positive rates aren't equal across groups ($0.6\neq0.8$), positive-rate parity is not satisfied.
 
 \item[(e)] Compute
 \[
@@ -120,7 +174,13 @@ P(Y=1 \mid \hat{Y}=1,S=0).
 
 Does the classifier satisfy \textbf{predictive rate parity}?
 
+\textbf{Solution:}
 
+$P(Y=1 \mid \hat{Y}=1,S=1)=\frac{30}{40}=0.75$
+
+$P(Y=1 \mid \hat{Y}=1,S=0)=\frac{20}{40}=0.5$
+
+Since the positive predictive values aren't equal across groups ($0.75\neq0.5$), predictive rate parity is not satisfied.
 
 \item[(f)] The company claims that its classifier is fair because
 it does not use the protected attribute $S$ and satisfies
@@ -131,7 +191,7 @@ In your answer, refer to the fairness metrics computed above
 and discuss why excluding protected attributes from training
 does not guarantee fairness.
 
-
+\textbf{Solution:} No. Excluding the protected attribute $S$ does not necessarily guarantee fairness because there might exist other features having correlated with membership and thus acting as proxy variables. In the case above, the classifier satisfies statistical parity and the 80\% rule, but fails both positive-rate parity and predictive rate parity. Therefore, statistical parity alone and the exclusion of protected attributes are insufficient to establish that the classifier is fair under all relevant fairness criteria.
 
 \end{enumerate}
 \newpage
@@ -162,14 +222,39 @@ Therefore the linear subspace that PCA will project the data to is the line $y =
 \begin{enumerate}[a.]
     \item Draw the first principal component as a line ($y=x$ in this case) on the graph. Also draw the data points projected to this subspace with lines connecting them to the corresponding original data points.
 
+    \textbf{Solution:}
+
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{Part2-a.png}
+    \end{center}
+
     
     \item How would \textbf{1}-Nearest Neighbour algorithm classify an e-mail with 21 spam words in a total of 100 ($x$=5) words? Explain your answer.
 
+    \textbf{Solution:} The test email containing 21 occurrences of spam words and 100 total words has the feature vector $x_{\text{test}}=(5,21)$, since the x-axis is scaled by 20.
+
+    Using Euclidean distance (also can tell from the graph), the closest training example is the spam email at $(5,25)$, with the Euclidean distance from the test email as
+
+    \[
+    d((5,21),(5,25))=\sqrt{(5-5)^2+(21-25)^2}=\sqrt{0+16}=4.
+    \]
+
+    Therefore, 1-NN assigns the email as $\hat{Y}_{\text{before PCA}}=\text{Spam}$.
     
     \item How would \textbf{1}-Nearest Neighbour algorithm classify the same e-mail given in the previous question after transforming the data to 1-dimension? Explain your answer.
 
+    \textbf{Solution:} After PCA, the one-dimensional coordinate of a point $x=(x_1,x_2)$ is $z=x\cdot u =\frac{x_1+x_2}{\sqrt{2}}$.
+
+    For the test email $(5,21)$, $z_{\text{test}} =\frac{5+21}{\sqrt{2}} =\frac{26}{\sqrt{2}}$.
+
+    Now, to find the point closest to this test email, we need to find the one that has the closest sum of $x_1$ and $x_2$, which is $x=(20,5)$ with $z_{\text{test}} =\frac{20+5}{\sqrt{2}} =\frac{25}{\sqrt{2}}$. 
+
+    This is non-spam email. Therefore, 1-NN assigns the test emial as $\hat{Y}_{\text{before PCA}}=\text{Non-spam}$.
+
     
     \item Are your answers same for part b and c? Why or why not?
+
+    \textbf{Solution:} No, because the predictions are different. Before PCA, the 1-NN predicts according to the closest point $(5,25)$ which is a spam. After PCA, the 1-NN predicts according to the closest point $(20,5)$ which is a non-spam. Projecting data from two dimensions to one dimension discards information in the direction orthogonal to the first principal component. As a result, distances between points can change, and the identity of the nearest neighbor can change.
 
 \end{enumerate}
 
@@ -185,15 +270,48 @@ Consider the following two-dimensional dataset:
 \begin{enumerate}[a.]
     \item Describe one type of machine learning model that would classify this data well. Explain your reasoning.
 
+    \textbf{Solution:} A linear classifier such as halfspace classifer. Because the black points are generally located above and to the left of the white points. The two classes can be separated approximately by a diagonal decision boundary with positive slope.
+
+    For example, the classifier could be $h(x)=\operatorname{sign}(wx+b)$.
+
     
     \item Draw the first principal component on the graph above. If PCA was used to reduce this data to one dimension, would the machine learning model from part (a) still classify the data well? Why or why not?
+
+    \textbf{Solution:} The first principal component is approximately the positively sloped diagonal direction from the bottom-left to the top-right of the graph, which captures the greatest variance in the combined dataset.
+
+    If PCA reduces the data from 2D to 2D by projecting onto this principal component, a halfspace classifier would not classify the data as well as it could in the original space, because the two classes are primarily separated in a direction approximately perpendicular to the first principal component.
+
+    Just like what we see in Part2, even although PCA preserves the direction of maximum variance, it may still discard information that is important for classification.
+
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{Part3-b.png}
+    \end{center}
 
     
     \item Is it possible to project the above data into a one-dimensional linear subspace in which the data remains linearly separable? If so, draw the subspace on the graph above. If not, explain your reasoning.
 
+    \textbf{Solution:}
+
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{Part3-c.png}
+    \end{center}
+
+    Yes. It's possible that a one-dimensional linear subspace can preserves the separation between the two classes. We can project the data onto a direction approximately perpendicular to the linear decision boundary as shown in the figure $y=x$ or $x_2=-x_1$.
+
+    Since the black points generally lie above and to the left of the white points, they tend to have larger values of $x_2-x_1$, while the white tend to have smaller values. Therefore, the projected values can be approximately separated by a threshold $t$:
+
+    \[
+    h(z)=
+    \begin{cases}
+    1, & z\geq t,\\
+    0, & z<t.
+    \end{cases}
+    \]
 
 
     \item What does this example tell you about the limitations of PCA when used to pre-process data before classification?
+
+    \textbf{Solution:} This demonstrates that PCA does not necessarily preserve the information most useful for classification. PCA may reduce classification performance by discarding low-variance directions that contain important class-discriminative information.
 
 \end{enumerate}
 

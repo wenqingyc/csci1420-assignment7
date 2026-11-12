@@ -1,0 +1,57 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{booktabs}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{CS1420}
+\newcommand\semester{Spring 2026}          % <-- current semester
+\newcommand\hwnumber{7}                    % <-- homework number
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\chead{\textbf{\Large Homework Report \hwnumber}}
+\rhead{\course\;--\;\semester \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Part 1}
+
+The Naive Bayes classifier returns a training accuracy of $77.43\%$ and a validation accuracy of $72.57\%$. Both accuracy rate although are not high, but are at least very similar indicating that there's probably no evidence of overfitting.
+
+
+\section*{Part 2}
+
+Naive Bayes makes the strong assumption that all features are conditionally independent given the class label, which gives us that for features $X_1, X_2, \ldots, X_d$ and class label $Y$,
+we have
+
+\[
+P(X_1,X_2,\ldots,X_d \mid Y)=\prod_{j=1}^{d}P(X_j\mid Y).
+\]
+
+This is unrealistic because many features are associated (i.e. emplotment history and savings or checking account status). Additionally, according to the preprocessing of the features, features categorized by one-hot-encoder will have sub-features that are actually dependent on each other. This can cause Naive Bayes to count correlated evidence more than once and make its predicted probabilities poorly calibrated.
+
+
+\section*{Part 3}
+
+For month and credit amount, we could bin the values into discrete categories and then use one-hot encoder to assign each category into binary indicators. For number of credits, since the distinct categories/credits in the feature is not a lot (i.e. 1,2,3), we can use one-hot-encoder to directly assign each category (i.e. number of credit = 1 or 2 or 3) into binary indicators.
+
+For the target variable credit, we can preprocess it by the formula credit = 2 - credit to make it becomes binary 0/1, with 1 = good and 0 = bad.
+
+
+\end{document}
